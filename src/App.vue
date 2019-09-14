@@ -12,21 +12,22 @@
     </v-app-bar>
 
     <v-content>
-      <KeyDetails />
+      <KeyInspector />
     </v-content>
   </v-app>
 </template>
 
 <script>
-import KeyDetails from "./components/KeyDetails";
+import KeyInspector from "./components/KeyInspector";
 
 export default {
   name: "App",
   components: {
-    KeyDetails
+    KeyInspector
   },
-  data: () => ({
-    //
-  })
+  data: () => ({}),
+  created() {
+    this.$vuetify.theme.dark = true;
+  }
 };
 </script>
