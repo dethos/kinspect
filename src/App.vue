@@ -26,7 +26,7 @@ export default {
     KeyInspector
   },
   data: () => ({}),
-  created() {
+  created: function() {
     this.$vuetify.theme.dark = true;
   }
 };
