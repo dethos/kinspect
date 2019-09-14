@@ -1,28 +1,32 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-app-bar app>
+      <v-toolbar-title class="headline text-uppercase">
+        <span>kinspector</span> -
+        <span class="font-weight-light">Check the details of any PGP key</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn text href="https://github.com/dethos/kinspector" target="_blank">
+        <span class="mr-2">Git Repository</span>
+      </v-btn>
+    </v-app-bar>
+
+    <v-content>
+      <KeyDetails />
+    </v-content>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import KeyDetails from "./components/KeyDetails";
 
 export default {
-  name: 'app',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    KeyDetails
+  },
+  data: () => ({
+    //
+  })
+};
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
