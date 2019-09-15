@@ -1,6 +1,7 @@
 # kinspector
 
-Small tool to quickly inspect the details for PGP public keys.
+Small tool to quickly inspect the details of public PGP keys.
+
 Just open the web page, paste the key on the textarea and the key properties will be displayed.
 
 ## Development Instructions
