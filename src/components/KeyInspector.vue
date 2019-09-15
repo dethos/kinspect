@@ -15,7 +15,13 @@
         ></v-textarea>
       </v-col>
       <v-col>
-        <KeyDetails v-bind:fingerprint="fingerprint" />
+        <h1 class="font-weight-light">Key Details</h1>
+        <div v-if="error">
+          <h1>{{error}}</h1>
+        </div>
+        <div v-for="pgpkey in keys" v-bind:key="pgpkey.getFingerprint()">
+          <KeyDetails v-bind:pgpkey="pgpkey" />
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -31,15 +37,19 @@ export default {
   },
   data: () => ({
     pubkey: "",
-    fingerprint: ""
+    keys: [],
+    error: ""
   }),
   methods: {
     inspect: async function() {
-      let keys = (await openpgp.key.readArmored(this.pubkey)).keys;
-      this.fingerprint = keys[0].getFingerprint();
+      try {
+        this.keys = (await openpgp.key.readArmored(this.pubkey)).keys;
+        this.error = "";
+      } catch (e) {
+        this.keys = [];
+        this.error = "Unable to parse the provided key";
+      }
     }
   }
 };
 </script>
-
-<style lang="stylus"></style>
