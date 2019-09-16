@@ -15,7 +15,6 @@
         ></v-textarea>
       </v-col>
       <v-col>
-        <h1 class="font-weight-light">Key Details</h1>
         <div v-if="error">
           <h1>{{error}}</h1>
         </div>

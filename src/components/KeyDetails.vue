@@ -1,31 +1,50 @@
 <template>
   <v-card>
     <v-card-title>
-      <span v-if="pgpkey.isPublic()">Public</span>
-      <span v-if="pgpkey.isPrivate()">Private</span>
-      Key: {{pgpkey.getKeyId().toHex().toUpperCase()}}
+      <span v-if="pgpkey.isPublic()">Public Key</span>
+      <span v-if="pgpkey.isPrivate()">Private Key</span>
+      <v-chip class="ma-2" outlined label>{{pgpkey.getKeyId().toHex().toUpperCase()}}</v-chip>
+      <div class="flex-grow-1"></div>
+      <v-chip class="ma-2" color="red" text-color="white" label v-if="revoked">Revoked</v-chip>
+      <v-chip class="ma-2" color="orange" text-color="white" label v-if="expired">Expired</v-chip>
     </v-card-title>
+    <v-divider />
     <v-card-text>
+      <v-subheader>General</v-subheader>
+      <v-list>
+        <v-list-item-content>
+          <v-list-item-title>
+            <strong>Fingerprint:</strong>
+            {{pgpkey.getFingerprint().toUpperCase()}}
+          </v-list-item-title>
+        </v-list-item-content>
+        <v-divider />
+        <v-list-item-content>
+          <v-list-item-title>
+            <strong>Algorithm:</strong>
+            {{pgpkey.getAlgorithmInfo()["algorithm"]}} (Size: {{pgpkey.getAlgorithmInfo()["bits"]}})
+          </v-list-item-title>
+        </v-list-item-content>
+        <v-divider />
+        <v-list-item-content>
+          <v-list-item-title>
+            <strong>Created:</strong>
+            {{pgpkey.getCreationTime()}}
+          </v-list-item-title>
+        </v-list-item-content>
+        <v-divider />
+        <v-list-item-content>
+          <v-list-item-title>
+            <strong>Expires:</strong>
+            {{expirationDate}}
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list>
+      <v-list>
+        <v-subheader>User details</v-subheader>
+      </v-list>
       <div>
-        <strong>Fingerprint:</strong>
-        {{pgpkey.getFingerprint().toUpperCase()}}
-      </div>
-      <div>
-        <strong>Algorithm:</strong>
-        {{pgpkey.getAlgorithmInfo()["algorithm"]}} (Size: {{pgpkey.getAlgorithmInfo()["bits"]}})
-      </div>
-      <div>
-        <strong>Created:</strong>
-        {{pgpkey.getCreationTime()}}
-      </div>
-      <div>
-        <strong>Expires:</strong>
-        {{expirationDate}}
-      </div>
-      <div>
-        <strong>Revoked:</strong>
-        <span v-if="revoked">Yes</span>
-        <span v-if="!revoked">No</span>
+        <v-subheader>Subkeys</v-subheader>
       </div>
     </v-card-text>
   </v-card>
@@ -36,6 +55,7 @@ export default {
   props: ["pgpkey"],
   data: () => ({
     expirationDate: "",
+    expired: false,
     revoked: false
   }),
   created: function() {
@@ -45,6 +65,7 @@ export default {
   methods: {
     getExpirationDate: async function() {
       this.expirationDate = await this.pgpkey.getExpirationTime();
+      this.expired = new Date(this.expirationDate) < new Date();
     },
     is_revoked: async function() {
       this.revoked = await this.pgpkey.isRevoked();
