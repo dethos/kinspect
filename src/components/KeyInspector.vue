@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
+        <v-alert dismissible type="error">Do not paste any private key that is currently in use.</v-alert>
         <v-textarea
           outlined
           autofocus

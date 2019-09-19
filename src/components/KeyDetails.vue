@@ -69,9 +69,6 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list>
-      <div>
-        <v-subheader>Subkeys</v-subheader>
-      </div>
     </v-card-text>
   </v-card>
 </template>
