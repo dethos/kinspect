@@ -22,7 +22,13 @@
         <v-list-item-content>
           <v-list-item-title>
             <strong>Algorithm:</strong>
-            {{pgpkey.getAlgorithmInfo()["algorithm"]}} (Size: {{pgpkey.getAlgorithmInfo()["bits"]}})
+            {{pgpkey.getAlgorithmInfo()["algorithm"]}}
+            <v-chip
+              class="ma-2"
+              color="primary"
+              label
+              text-color="white"
+            >{{pgpkey.getAlgorithmInfo()["bits"]}} bits</v-chip>
           </v-list-item-title>
         </v-list-item-content>
         <v-divider />
@@ -40,8 +46,28 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list>
+      <v-subheader>User details</v-subheader>
       <v-list>
-        <v-subheader>User details</v-subheader>
+        <v-list-item-content>
+          <v-list-item-title>
+            <strong>Name:</strong>
+            {{user.name}}
+          </v-list-item-title>
+        </v-list-item-content>
+        <v-divider />
+        <v-list-item-content>
+          <v-list-item-title>
+            <strong>Email:</strong>
+            {{user.email}}
+          </v-list-item-title>
+        </v-list-item-content>
+        <v-divider />
+        <v-list-item-content>
+          <v-list-item-title>
+            <strong>Comment:</strong>
+            {{user.comment}}
+          </v-list-item-title>
+        </v-list-item-content>
       </v-list>
       <div>
         <v-subheader>Subkeys</v-subheader>
@@ -56,19 +82,29 @@ export default {
   data: () => ({
     expirationDate: "",
     expired: false,
-    revoked: false
+    revoked: false,
+    user: {}
   }),
   created: function() {
     this.getExpirationDate();
     this.is_revoked();
+    this.getUserDetails();
   },
   methods: {
     getExpirationDate: async function() {
-      this.expirationDate = await this.pgpkey.getExpirationTime();
-      this.expired = new Date(this.expirationDate) < new Date();
+      let expirationDate = await this.pgpkey.getExpirationTime();
+      if (expirationDate != Infinity) {
+        this.expirationDate = expirationDate;
+        this.expired = new Date(this.expirationDate) < new Date();
+      } else {
+        this.expirationDate = "Never";
+      }
     },
     is_revoked: async function() {
       this.revoked = await this.pgpkey.isRevoked();
+    },
+    getUserDetails: async function() {
+      this.user = (await this.pgpkey.getPrimaryUser()).user.userId;
     }
   }
 };
