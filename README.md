@@ -1,4 +1,4 @@
-# kinspector
+# kinspect
 
 Small tool to quickly inspect the details of public PGP keys.
 
