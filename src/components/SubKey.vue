@@ -1,9 +1,8 @@
 <template>
   <v-card>
     <v-card-title>
-      <v-icon>mdi-account-key</v-icon>
-      <span v-if="pgpkey.isPublic()">Public Key</span>
-      <span v-if="pgpkey.isPrivate()">Private Key</span>
+      <v-icon>mdi-key</v-icon>
+      Subkey
       <v-chip class="ma-2" outlined label>{{
         pgpkey
           .getKeyId()
@@ -25,7 +24,6 @@
     </v-card-title>
     <v-divider />
     <v-card-text>
-      <v-subheader>General</v-subheader>
       <v-list>
         <v-list-item-content>
           <v-list-item-title>
@@ -58,29 +56,6 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list>
-      <v-subheader>Primary User</v-subheader>
-      <v-list>
-        <v-list-item-content>
-          <v-list-item-title>
-            <strong>Name:</strong>
-            {{ user.name }}
-          </v-list-item-title>
-        </v-list-item-content>
-        <v-divider />
-        <v-list-item-content>
-          <v-list-item-title>
-            <strong>Email:</strong>
-            {{ user.email }}
-          </v-list-item-title>
-        </v-list-item-content>
-        <v-divider />
-        <v-list-item-content>
-          <v-list-item-title>
-            <strong>Comment:</strong>
-            {{ user.comment }}
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list>
     </v-card-text>
   </v-card>
 </template>
@@ -91,13 +66,11 @@ export default {
   data: () => ({
     expirationDate: "",
     expired: false,
-    revoked: false,
-    user: {}
+    revoked: false
   }),
   created: function() {
     this.getExpirationDate();
     this.is_revoked();
-    this.getUserDetails();
   },
   methods: {
     getExpirationDate: async function() {
@@ -111,9 +84,6 @@ export default {
     },
     is_revoked: async function() {
       this.revoked = await this.pgpkey.isRevoked();
-    },
-    getUserDetails: async function() {
-      this.user = (await this.pgpkey.getPrimaryUser()).user.userId;
     }
   }
 };

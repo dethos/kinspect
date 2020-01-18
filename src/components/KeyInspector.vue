@@ -2,26 +2,43 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert dismissible type="error">Do not paste any private key that is currently in use.</v-alert>
+        <v-alert dismissible type="error"
+          >Do not paste any private key that is currently in use.</v-alert
+        >
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
         <v-textarea
           outlined
           autofocus
-          auto-grow
-          rows="10"
-          height="100%"
+          rows="15"
           hint="Paste your public key here. Click outside of the textarea to trigger the evaluation."
           label="Public Key"
           v-on:change="inspect"
           v-model="pubkey"
         ></v-textarea>
       </v-col>
+    </v-row>
+
+    <v-row v-if="error">
       <v-col>
-        <div v-if="error">
-          <h1>{{error}}</h1>
-        </div>
-        <div v-for="pgpkey in keys" v-bind:key="pgpkey.getFingerprint()">
-          <KeyDetails v-bind:pgpkey="pgpkey" />
-        </div>
+        <h1>{{ error }}</h1>
+      </v-col>
+    </v-row>
+
+    <v-row v-for="pgpkey in keys" v-bind:key="pgpkey.getFingerprint()">
+      <v-col>
+        <KeyDetails v-bind:pgpkey="pgpkey" />
+      </v-col>
+      <v-col
+        v-for="subkey in pgpkey.subKeys"
+        v-bind:key="subkey.getFingerprint()"
+      >
+        <SubKey v-bind:pgpkey="subkey" />
+      </v-col>
+      <v-col v-for="user in pgpkey.users" v-bind:key="user.userId.userid">
+        <UserId v-bind:user="user" />
       </v-col>
     </v-row>
   </v-container>
@@ -29,11 +46,15 @@
 
 <script>
 import KeyDetails from "./KeyDetails";
+import SubKey from "./SubKey";
+import UserId from "./UserId";
 import * as openpgp from "openpgp";
 
 export default {
   components: {
-    KeyDetails
+    KeyDetails,
+    SubKey,
+    UserId
   },
   data: () => ({
     pubkey: "",
