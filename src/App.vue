@@ -15,7 +15,7 @@
     </v-app-bar>
 
     <v-content>
-      <KeyInspector />
+      <KeyInspect />
     </v-content>
 
     <v-footer>
@@ -30,12 +30,12 @@
 </template>
 
 <script>
-import KeyInspector from "./components/KeyInspector";
+import KeyInspect from "./components/KeyInspect";
 
 export default {
   name: "App",
   components: {
-    KeyInspector
+    KeyInspect
   },
   data: () => ({
     darkTheme: true

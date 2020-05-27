@@ -2,9 +2,11 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-alert dismissible type="error"
-          >Do not paste any private key that is currently in use.</v-alert
-        >
+        <v-alert
+          v-model="alert"
+          dismissible
+          type="error"
+        >Do not paste any private key that is currently in use.</v-alert>
       </v-col>
     </v-row>
     <v-row>
@@ -31,10 +33,7 @@
       <v-col>
         <KeyDetails v-bind:pgpkey="pgpkey" />
       </v-col>
-      <v-col
-        v-for="subkey in pgpkey.subKeys"
-        v-bind:key="subkey.getFingerprint()"
-      >
+      <v-col v-for="subkey in pgpkey.subKeys" v-bind:key="subkey.getFingerprint()">
         <SubKey v-bind:pgpkey="subkey" />
       </v-col>
       <v-col v-for="user in pgpkey.users" v-bind:key="user.userId.userid">
@@ -59,7 +58,8 @@ export default {
   data: () => ({
     pubkey: "",
     keys: [],
-    error: ""
+    error: "",
+    alert: localStorage.getItem("keyAlertDismissed") == "true" ? false : true
   }),
   methods: {
     inspect: async function() {
@@ -70,6 +70,11 @@ export default {
         this.keys = [];
         this.error = "Unable to parse the provided key";
       }
+    }
+  },
+  watch: {
+    alert: function() {
+      localStorage.setItem("keyAlertDismissed", true);
     }
   }
 };
