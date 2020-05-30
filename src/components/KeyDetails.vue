@@ -4,24 +4,17 @@
       <v-icon>mdi-account-key</v-icon>
       <span v-if="pgpkey.isPublic()">Public Key</span>
       <span v-if="pgpkey.isPrivate()">Private Key</span>
-      <v-chip class="ma-2" outlined label>{{
+      <v-chip class="ma-2" outlined label>
+        {{
         pgpkey
-          .getKeyId()
-          .toHex()
-          .toUpperCase()
-      }}</v-chip>
+        .getKeyId()
+        .toHex()
+        .toUpperCase()
+        }}
+      </v-chip>
       <div class="flex-grow-1"></div>
-      <v-chip class="ma-2" color="red" text-color="white" label v-if="revoked"
-        >Revoked</v-chip
-      >
-      <v-chip
-        class="ma-2"
-        color="orange"
-        text-color="white"
-        label
-        v-if="expired"
-        >Expired</v-chip
-      >
+      <v-chip class="ma-2" color="red" text-color="white" label v-if="revoked">Revoked</v-chip>
+      <v-chip class="ma-2" color="orange" text-color="white" label v-if="expired">Expired</v-chip>
     </v-card-title>
     <v-divider />
     <v-card-text>
@@ -38,9 +31,12 @@
           <v-list-item-title>
             <strong>Algorithm:</strong>
             {{ pgpkey.getAlgorithmInfo()["algorithm"] }}
-            <v-chip class="ma-2" color="primary" label text-color="white"
-              >{{ pgpkey.getAlgorithmInfo()["bits"] }} bits</v-chip
-            >
+            <v-chip
+              class="ma-2"
+              color="primary"
+              label
+              text-color="white"
+            >{{ pgpkey.getAlgorithmInfo()["bits"] }} bits</v-chip>
           </v-list-item-title>
         </v-list-item-content>
         <v-divider />
@@ -95,9 +91,10 @@ export default {
     user: {}
   }),
   created: function() {
-    this.getExpirationDate();
-    this.is_revoked();
-    this.getUserDetails();
+    this.refreshData();
+  },
+  updated: function() {
+    this.refreshData();
   },
   methods: {
     getExpirationDate: async function() {
@@ -114,6 +111,11 @@ export default {
     },
     getUserDetails: async function() {
       this.user = (await this.pgpkey.getPrimaryUser()).user.userId;
+    },
+    refreshData: function() {
+      this.getExpirationDate();
+      this.is_revoked();
+      this.getUserDetails();
     }
   }
 };
