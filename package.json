@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
-    "openpgp": "^4.6.2",
+    "openpgp": "^4.10.4",
     "vue": "^2.6.10",
     "vuetify": "^2.0.0"
   },

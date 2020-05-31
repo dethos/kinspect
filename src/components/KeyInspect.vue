@@ -11,7 +11,11 @@
     </v-row>
     <v-row>
       <v-col cols="3" v-if="previousPubKeys.length > 0">
-        <KeyList v-bind:keys="previousPubKeys" v-on:viewKey="setKey" />
+        <KeyList
+          v-bind:keys="previousPubKeys"
+          v-on:viewKey="setKey"
+          v-on:clearKeys="clearPrevKeys"
+        />
       </v-col>
       <v-col>
         <v-row>
@@ -94,9 +98,9 @@ export default {
       if (!found) {
         this.previousPubKeys.unshift({
           fingerprint: fingerprint,
-          created: this.key.getCreationTime(),
-          added: new Date().toISOString(),
+          name: user.name,
           email: user.email,
+          added: new Date().toLocaleDateString(),
           pubkey: this.pubkey
         });
         localStorage.setItem(
@@ -108,6 +112,10 @@ export default {
     setKey: function(key) {
       this.pubkey = key;
       this.inspect();
+    },
+    clearPrevKeys: function() {
+      this.previousPubKeys = [];
+      localStorage.setItem("previousPubKeys", "[]");
     }
   },
   watch: {

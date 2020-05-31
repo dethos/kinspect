@@ -2,6 +2,10 @@
   <v-card>
     <v-toolbar dark>
       <v-toolbar-title>Previous Keys</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn icon @click.native="clearAllKeys">
+        <v-icon>mdi-checkbox-marked-circle</v-icon>
+      </v-btn>
     </v-toolbar>
     <v-list two-line>
       <v-list-item-group>
@@ -9,9 +13,9 @@
           <v-list-item :key="item.fingerprint" @click="selectKey(index)">
             <template>
               <v-list-item-content>
-                <v-list-item-title v-text="item.email"></v-list-item-title>
-                <v-list-item-subtitle class="text--primary" v-text="item.fingerprint"></v-list-item-subtitle>
-                <v-list-item-subtitle v-text="item.created"></v-list-item-subtitle>
+                <v-list-item-title v-text="item.name"></v-list-item-title>
+                <v-list-item-subtitle class="text--primary" v-text="item.email"></v-list-item-subtitle>
+                <v-list-item-subtitle v-text="item.fingerprint"></v-list-item-subtitle>
               </v-list-item-content>
 
               <v-list-item-action>
@@ -33,6 +37,9 @@ export default {
   methods: {
     selectKey: function(index) {
       this.$emit("viewKey", this.keys[index].pubkey);
+    },
+    clearAllKeys: function() {
+      this.$emit("clearKeys");
     }
   }
 };

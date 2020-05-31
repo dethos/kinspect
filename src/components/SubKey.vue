@@ -1,26 +1,18 @@
 <template>
   <v-card>
     <v-card-title>
-      <v-icon>mdi-key</v-icon>
-      Subkey
-      <v-chip class="ma-2" outlined label>{{
+      <v-icon>mdi-key</v-icon>Subkey
+      <v-chip class="ma-2" outlined label>
+        {{
         pgpkey
-          .getKeyId()
-          .toHex()
-          .toUpperCase()
-      }}</v-chip>
+        .getKeyId()
+        .toHex()
+        .toUpperCase()
+        }}
+      </v-chip>
       <div class="flex-grow-1"></div>
-      <v-chip class="ma-2" color="red" text-color="white" label v-if="revoked"
-        >Revoked</v-chip
-      >
-      <v-chip
-        class="ma-2"
-        color="orange"
-        text-color="white"
-        label
-        v-if="expired"
-        >Expired</v-chip
-      >
+      <v-chip class="ma-2" color="red" text-color="white" label v-if="revoked">Revoked</v-chip>
+      <v-chip class="ma-2" color="orange" text-color="white" label v-if="expired">Expired</v-chip>
     </v-card-title>
     <v-divider />
     <v-card-text>
@@ -36,9 +28,12 @@
           <v-list-item-title>
             <strong>Algorithm:</strong>
             {{ pgpkey.getAlgorithmInfo()["algorithm"] }}
-            <v-chip class="ma-2" color="primary" label text-color="white"
-              >{{ pgpkey.getAlgorithmInfo()["bits"] }} bits</v-chip
-            >
+            <v-chip
+              class="ma-2"
+              color="primary"
+              label
+              text-color="white"
+            >{{ pgpkey.getAlgorithmInfo()["bits"] }} bits</v-chip>
           </v-list-item-title>
         </v-list-item-content>
         <v-divider />
@@ -68,14 +63,18 @@ export default {
     expired: false,
     revoked: false
   }),
+  watch: {
+    pgpkey: function() {
+      this.refreshData();
+    }
+  },
   created: function() {
-    this.getExpirationDate();
-    this.is_revoked();
+    this.refreshData();
   },
   methods: {
     getExpirationDate: async function() {
       let expirationDate = await this.pgpkey.getExpirationTime();
-      if (expirationDate != Infinity) {
+      if (expirationDate) {
         this.expirationDate = expirationDate;
         this.expired = new Date(this.expirationDate) < new Date();
       } else {
@@ -84,6 +83,10 @@ export default {
     },
     is_revoked: async function() {
       this.revoked = await this.pgpkey.isRevoked();
+    },
+    refreshData: function() {
+      this.getExpirationDate();
+      this.is_revoked();
     }
   }
 };

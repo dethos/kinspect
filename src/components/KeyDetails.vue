@@ -90,10 +90,12 @@ export default {
     revoked: false,
     user: {}
   }),
-  created: function() {
-    this.refreshData();
+  watch: {
+    pgpkey: function() {
+      this.refreshData();
+    }
   },
-  updated: function() {
+  created: function() {
     this.refreshData();
   },
   methods: {
