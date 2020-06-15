@@ -36,7 +36,15 @@
               color="primary"
               label
               text-color="white"
-            >{{ pgpkey.getAlgorithmInfo()["bits"] }} bits</v-chip>
+              v-if="pgpkey.getAlgorithmInfo()['bits']"
+            >{{ pgpkey.getAlgorithmInfo()["bits"]}} bits</v-chip>
+            <v-chip
+              class="ma-2"
+              color="primary"
+              label
+              text-color="white"
+              v-if="pgpkey.getAlgorithmInfo()['curve']"
+            >{{ pgpkey.getAlgorithmInfo()["curve"]}}</v-chip>
           </v-list-item-title>
         </v-list-item-content>
         <v-divider />
