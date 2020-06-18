@@ -6,6 +6,9 @@
         <span class="font-weight-light">Check the details of any PGP key</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn text @click.stop="searchDialog = true">
+        <span class="mr-2">Search Key</span>
+      </v-btn>
       <v-btn text v-on:click="changeTheme">
         <span class="mr-2">Swicth to {{darkTheme ? "light theme" : "dark theme"}}</span>
       </v-btn>
@@ -15,7 +18,12 @@
     </v-app-bar>
 
     <v-content>
-      <KeyInspect />
+      <KeyInspect v-bind:initialKey="searchKey" />
+      <DirSearch
+        v-bind:dialog="searchDialog"
+        v-on:dialogClosed="closeDialog"
+        v-on:keyFound="setSearchKey"
+      />
     </v-content>
 
     <v-footer>
@@ -31,14 +39,18 @@
 
 <script>
 import KeyInspect from "./components/KeyInspect";
+import DirSearch from "./components/DirSearch";
 
 export default {
   name: "App",
   components: {
-    KeyInspect
+    KeyInspect,
+    DirSearch
   },
   data: () => ({
-    darkTheme: true
+    darkTheme: true,
+    searchDialog: false,
+    searchKey: ""
   }),
   created: function() {
     this.$vuetify.theme.dark = this.darkTheme;
@@ -47,6 +59,12 @@ export default {
     changeTheme: function() {
       this.darkTheme = !this.darkTheme;
       this.$vuetify.theme.dark = this.darkTheme;
+    },
+    closeDialog: function() {
+      this.searchDialog = false;
+    },
+    setSearchKey: function(armoredKey) {
+      this.searchKey = armoredKey;
     }
   }
 };

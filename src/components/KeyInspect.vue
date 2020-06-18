@@ -68,13 +68,20 @@ export default {
     SubKey,
     UserId
   },
-  data: () => ({
-    pubkey: "",
-    key: null,
-    error: "",
-    alert: localStorage.getItem("keyAlertDismissed") == "true" ? false : true,
-    previousPubKeys: JSON.parse(localStorage.getItem("previousPubKeys")) || []
-  }),
+  props: {
+    initialKey: {
+      default: ""
+    }
+  },
+  data: function() {
+    return {
+      pubkey: this.initialKey ? this.initialKey : "",
+      key: null,
+      error: "",
+      alert: localStorage.getItem("keyAlertDismissed") == "true" ? false : true,
+      previousPubKeys: JSON.parse(localStorage.getItem("previousPubKeys")) || []
+    };
+  },
   methods: {
     inspect: async function() {
       try {
@@ -121,6 +128,10 @@ export default {
   watch: {
     alert: function() {
       localStorage.setItem("keyAlertDismissed", true);
+    },
+    initialKey: function(newValue) {
+      this.pubkey = newValue;
+      this.inspect();
     }
   }
 };
