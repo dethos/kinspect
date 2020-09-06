@@ -59,33 +59,34 @@ import KeyList from "./KeyList";
 import KeyDetails from "./KeyDetails";
 import SubKey from "./SubKey";
 import UserId from "./UserId";
-import * as openpgp from "openpgp";
+import key from "openpgp";
 
 export default {
   components: {
     KeyList,
     KeyDetails,
     SubKey,
-    UserId
+    UserId,
   },
   props: {
     initialKey: {
-      default: ""
-    }
+      default: "",
+    },
   },
-  data: function() {
+  data: function () {
     return {
       pubkey: this.initialKey ? this.initialKey : "",
       key: null,
       error: "",
       alert: localStorage.getItem("keyAlertDismissed") == "true" ? false : true,
-      previousPubKeys: JSON.parse(localStorage.getItem("previousPubKeys")) || []
+      previousPubKeys:
+        JSON.parse(localStorage.getItem("previousPubKeys")) || [],
     };
   },
   methods: {
-    inspect: async function() {
+    inspect: async function () {
       try {
-        this.key = (await openpgp.key.readArmored(this.pubkey)).keys[0];
+        this.key = (await key.readArmored(this.pubkey)).keys[0];
         this.error = "";
       } catch (e) {
         this.key = null;
@@ -96,11 +97,11 @@ export default {
         this.updateKeyList();
       }
     },
-    updateKeyList: async function() {
+    updateKeyList: async function () {
       let fingerprint = this.key.getFingerprint().toUpperCase();
       let user = (await this.key.getPrimaryUser()).user.userId;
       let found = this.previousPubKeys.find(
-        key => key.fingerprint == fingerprint
+        (key) => key.fingerprint == fingerprint
       );
       if (!found) {
         this.previousPubKeys.unshift({
@@ -108,7 +109,7 @@ export default {
           name: user.name,
           email: user.email,
           added: new Date().toLocaleDateString(),
-          pubkey: this.pubkey
+          pubkey: this.pubkey,
         });
         localStorage.setItem(
           "previousPubKeys",
@@ -116,23 +117,23 @@ export default {
         );
       }
     },
-    setKey: function(key) {
+    setKey: function (key) {
       this.pubkey = key;
       this.inspect();
     },
-    clearPrevKeys: function() {
+    clearPrevKeys: function () {
       this.previousPubKeys = [];
       localStorage.setItem("previousPubKeys", "[]");
-    }
+    },
   },
   watch: {
-    alert: function() {
+    alert: function () {
       localStorage.setItem("keyAlertDismissed", true);
     },
-    initialKey: function(newValue) {
+    initialKey: function (newValue) {
       this.pubkey = newValue;
       this.inspect();
-    }
-  }
+    },
+  },
 };
 </script>

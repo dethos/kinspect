@@ -45,27 +45,27 @@ export default {
   name: "App",
   components: {
     KeyInspect,
-    DirSearch
+    DirSearch,
   },
   data: () => ({
     darkTheme: true,
     searchDialog: false,
-    searchKey: ""
+    searchKey: "",
   }),
-  created: function() {
+  created: function () {
     this.$vuetify.theme.dark = this.darkTheme;
   },
   methods: {
-    changeTheme: function() {
+    changeTheme: function () {
       this.darkTheme = !this.darkTheme;
       this.$vuetify.theme.dark = this.darkTheme;
     },
-    closeDialog: function() {
+    closeDialog: function () {
       this.searchDialog = false;
     },
-    setSearchKey: function(armoredKey) {
+    setSearchKey: function (armoredKey) {
       this.searchKey = armoredKey;
-    }
-  }
+    },
+  },
 };
 </script>

@@ -26,25 +26,25 @@
 </template>
 
 <script>
-import * as openpgp from "openpgp";
+import WKD from "openpgp";
 
 export default {
   props: ["dialog"],
   data: () => ({
     email: "",
     emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      (v) => !!v || "E-mail is required",
+      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
     ],
-    error: ""
+    error: "",
   }),
   methods: {
-    closeDialog: function() {
+    closeDialog: function () {
       this.$emit("dialogClosed");
     },
-    searchKey: async function() {
+    searchKey: async function () {
       this.error = "";
-      let wkd = new openpgp.WKD();
+      let wkd = new WKD();
       try {
         let result = await wkd.lookup({ email: this.email });
         let key = result.keys[0];
@@ -53,7 +53,7 @@ export default {
       } catch (e) {
         this.error = "Unable to find the key for the specified email address.";
       }
-    }
-  }
+    },
+  },
 };
 </script>
